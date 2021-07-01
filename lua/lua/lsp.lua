@@ -74,17 +74,28 @@ local function setup_nlua()
     require('nlua.lsp.nvim').setup(require('lspconfig'), config)
 end
 
-local function setup_cland()
+--[[ local function setup_clangd()
     local config = make_config()
     config.filetypes = {"c", "cpp"}; -- we don't want objective-c and objective-cpp!
     require('lspconfig').clangd.setup(config)
+end ]]
+
+local function setup_ccls()
+    local config = make_config()
+    config.init_options = {
+        cache = {
+            directory = ".ccls-cache"
+        }
+    }
+    require('lspconfig').ccls.setup(config)
 end
 
 local function setup_servers()
     setup_pyright()
-    setup_cland()
     setup_nlua()
+    setup_ccls()
 end
+
 
 setup_servers()
 
