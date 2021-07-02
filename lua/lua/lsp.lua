@@ -1,4 +1,6 @@
 -- keymaps
+local M = {}
+
 local on_attach_keymaps = function(client, bufnr)
     local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
     local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
@@ -61,12 +63,12 @@ local function make_config()
     }
 end
 
-local function setup_pyright()
+function M.setup_pyright()
     local config = make_config()
     require ('lspconfig').pyright.setup(config)
 end
 
-local function setup_nlua()
+function M.setup_nlua()
     local config = make_config()
     config.globals = {
         "Color", "c", "Group", "g", "s"
@@ -74,13 +76,13 @@ local function setup_nlua()
     require('nlua.lsp.nvim').setup(require('lspconfig'), config)
 end
 
---[[ local function setup_clangd()
+function M.setup_clangd()
     local config = make_config()
     config.filetypes = {"c", "cpp"}; -- we don't want objective-c and objective-cpp!
     require('lspconfig').clangd.setup(config)
-end ]]
+end
 
-local function setup_ccls()
+function M.setup_ccls()
     local config = make_config()
     config.init_options = {
         cache = {
@@ -90,12 +92,8 @@ local function setup_ccls()
     require('lspconfig').ccls.setup(config)
 end
 
-local function setup_servers()
-    setup_pyright()
-    setup_nlua()
-    setup_ccls()
-end
+
+return M
 
 
-setup_servers()
 
