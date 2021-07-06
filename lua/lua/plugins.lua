@@ -1,7 +1,8 @@
-local map = vim.api.nvim_set_keymap
-local opt = vim.opt
-local g = vim.g
-local cmd = vim.cmd
+map = vim.api.nvim_set_keymap
+opt = vim.opt
+g = vim.g
+cmd = vim.cmd
+fn = vim.fn
 
 return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
@@ -21,7 +22,7 @@ return require('packer').startup(function(use)
             g.comfortable_motion_scroll_up_key = "k"
             local opts = { noremap = true, silent = true }
             map('n', '<ScrollWheelDown>', ':call comfortable_motion#flick(40)<CR>', opts) 
-            map('n', '<ScrollWheelUp>', ':call comfortable_motion#flick(-40)<CR>') 
+            map('n', '<ScrollWheelUp>', ':call comfortable_motion#flick(-40)<CR>', opts) 
         end
     }
 
@@ -41,6 +42,9 @@ return require('packer').startup(function(use)
             local opts = { noremap = true, silent = true}
             map('n', '<A-i>', '<CMD>lua require("FTerm").toggle()<CR>', opts)
             map('t', '<A-i>', '<C-\\><C-n><CMD>lua require("FTerm").toggle()<CR>', opts)
+        end,
+        cond = function()
+            return fn.has('windows') ~= 1
         end
     }
 
@@ -49,7 +53,11 @@ return require('packer').startup(function(use)
         'neovim/nvim-lspconfig',
         config = function() 
             local lsp = require('lsp')
-            lsp.setup_ccls()
+            if fn.has('windows') then
+                lsp.setup_clangd()
+            else
+                lsp.setup_ccls()
+            end
             lsp.setup_pyright()
         end
     }
@@ -57,7 +65,7 @@ return require('packer').startup(function(use)
     use {
         'nvim-lua/completion-nvim',
         config = function ()
-            -- vim.opt.completeopt = {'menuone', 'noinsert', 'noselect'}
+            -- opt.completeopt = {'menuone', 'noinsert', 'noselect'}
             opt.completeopt = {'menuone', 'noinsert'}
             opt.shortmess = opt.shortmess + 'c'
             g.completion_matching_smart_case = 1

@@ -11,8 +11,11 @@ vim.opt.number = true end
 
 
 local function config_gui()
---    vim.opt.guifont="Sarasa Term SC:h16"
-    vim.opt.guifont="Iosevka Term:h16"
+    if vim.fn.has('windows') then
+        vim.opt.guifont="FuraMono NF:h16"
+    else
+        vim.opt.guifont="Iosevka Term:h16"
+    end
 end
 
 local function config_mouse()
